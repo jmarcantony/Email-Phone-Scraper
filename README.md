@@ -9,9 +9,11 @@ Simple Python Script that get all emails and phone numbers from a webpage
 # Installation on Windows:
 * `git clone https://github.com/jmarcantony/Email-Phone-Scraper.git`
 * `cd Email-Phone-Scraper`
+* `pip install -r requirements.txt`
 * `python main.py`
 
 # Installation on Linux and Unix like OS:
 * `git clone https://github.com/jmarcantony/Email-Phone-Scraper.git`
 * `cd Email-Phone-Scraper`
+* `pip3 install -r requirements.txt`
 * `python3 main.py`
