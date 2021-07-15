@@ -45,10 +45,10 @@ def harvest_emails(url, saveEmails=False, filename=None):
         emails = set(re.findall(pattern, data))
         for email in emails:
             print(f"[+] Email Found: {email}")
-        print(f"[*] Found {len(emails)} emails")
+        print(f"[*] Found {len(emails)} emails\n")
         if saveEmails:
             log(emails, filename)
-            print(f"[*] Saved Harvested Emails in '{filename}'")
+            print(f"[*] Saved Harvested Emails in '{filename}'\n")
     else:
         print("[-] Did not find any valid emails")
 
@@ -67,16 +67,15 @@ def harvest_phones(url, savePhones=False, filename=None):
         nums = set(re.findall(pattern, data))
         for num in nums:
             print(f"[+] Phone Number Found: {num}")
-        print(f"[*] Found {len(nums)} phone numbers")
+        print(f"[*] Found {len(nums)} phone numbers\n")
         if savePhones:
             log(nums, filename)
-            print(f"[*] Saved Harvested Phone Numbers in '{filename}'")
+            print(f"[*] Saved Harvested Phone Numbers in '{filename}'\n")
     else:
         print("[-] Did not find any valid phone numbers")
 
 def harvest(url, save=False, filename=None):
     harvest_emails(url, save, filename)
-    print("")
     harvest_phones(url, save, filename)
 
 
