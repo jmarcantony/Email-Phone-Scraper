@@ -1,12 +1,17 @@
-import re
-import sys
-import requests
-import validators
+try:
+    import os
+    import re
+    import sys
+    import requests
+    import validators
+except ModuleNotFoundError:
+    print("[-] Requirements not satisfied!\n\trun 'pip install -r requirements.txt'\n\t\tOR\n\trun 'pip3 install -r requirements.txt'")
+    quit()
 
 def print_docs():
-    docs = """
+    docs = f"""
     Documentation:
-        Base Usage: python3 harvester.py [URL] [FLAGS]
+        Base Usage: {"python" if os.name == "nt" else "python3"} {sys.argv[0]} [URL] [FLAGS]
 
         Flags:
             -a:
@@ -20,10 +25,10 @@ def print_docs():
     """
     print(docs)
 
-def log(emails, filename):
+def log(data, filename):
     with open(filename, "a") as f:
-        for email in emails:
-            f.write(f"{email}\n")
+        for info in data:
+            f.write(f"{info}\n")
 
 def harvest_emails(url, saveEmails=False, filename=None):
     try:
@@ -37,9 +42,10 @@ def harvest_emails(url, saveEmails=False, filename=None):
     pattern = r"([\d\w\.]+@[\d\w\.\-]+\.\w+)"
     
     if re.search(pattern, data):
-        emails = re.findall(pattern, data)
+        emails = set(re.findall(pattern, data))
         for email in emails:
             print(f"[+] Email Found: {email}")
+        print(f"[*] Found {len(emails)} emails")
         if saveEmails:
             log(emails, filename)
             print(f"[*] Saved Harvested Emails in '{filename}'")
@@ -58,9 +64,10 @@ def harvest_phones(url, savePhones=False, filename=None):
     pattern = r"(\(?[0-9]{3}\)?(?:\-|\s|\.)?[0-9]{3}(?:\-|\.)[0-9]{4})"
     
     if re.search(pattern, data):
-        nums = re.findall(pattern, data)
+        nums = set(re.findall(pattern, data))
         for num in nums:
             print(f"[+] Phone Number Found: {num}")
+        print(f"[*] Found {len(nums)} phone numbers")
         if savePhones:
             log(nums, filename)
             print(f"[*] Saved Harvested Phone Numbers in '{filename}'")
@@ -117,8 +124,8 @@ def main():
             print(f"[-] Invalid URL")
             sys.exit()
     else:
-        print(f"[-] Invalid Usage:\n\tUsage: python3 {sys.argv[0]} [URL] [FLAGS]")
-        print(f"\tTry 'python3 {sys.argv[0]} --help' for help")
+        print(f"[-] Invalid Usage:\n\tUsage: {'python' if os.name == 'nt' else 'python3'} {sys.argv[0]} [URL] [FLAGS]")
+        print(f"\tTry '{'python' if os.name == 'nt' else 'python3'} {sys.argv[0]} --help' for help")
         sys.exit()
 
 if __name__ == "__main__":
