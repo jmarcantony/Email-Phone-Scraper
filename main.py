@@ -30,15 +30,7 @@ def log(data, filename):
         for info in data:
             f.write(f"{info}\n")
 
-def harvest_emails(url, saveEmails=False, filename=None):
-    try:
-        r = requests.get(url)
-    except:
-        print("[-] The requested URL did not respond back")
-        sys.exit()
-    
-    data = r.text
-    
+def harvest_emails(data, saveEmails=False, filename=None):
     pattern = r"([\d\w\.]+@[\d\w\.\-]+\.\w+)"
     
     if re.search(pattern, data):
@@ -52,15 +44,7 @@ def harvest_emails(url, saveEmails=False, filename=None):
     else:
         print("[-] Did not find any valid emails")
 
-def harvest_phones(url, savePhones=False, filename=None):
-    try:
-        r = requests.get(url)
-    except:
-        print("[-] The requested URL did not respond back")
-        sys.exit()
-    
-    data = r.text
-    
+def harvest_phones(data, savePhones=False, filename=None):
     pattern = r"(\(?[0-9]{3}\)?(?:\-|\s|\.)?[0-9]{3}(?:\-|\.)[0-9]{4})"
     
     if re.search(pattern, data):
@@ -74,9 +58,9 @@ def harvest_phones(url, savePhones=False, filename=None):
     else:
         print("[-] Did not find any valid phone numbers")
 
-def harvest(url, save=False, filename=None):
-    harvest_emails(url, save, filename)
-    harvest_phones(url, save, filename)
+def harvest(data, save=False, filename=None):
+    harvest_emails(data, save, filename)
+    harvest_phones(data, save, filename)
 
 
 def main():
@@ -87,6 +71,12 @@ def main():
         url = sys.argv[1]
         isValid = validators.url(url)
         if isValid:
+            try:
+                r = requests.get(url)
+            except:
+                print("[-] The requested URL did not respond back")
+                sys.exit()
+            data = r.text
             if "-a" in sys.argv:
                 if "-O" in sys.argv:
                     try:
@@ -94,9 +84,9 @@ def main():
                     except IndexError:
                         print("[-] Please provide a valid filename")
                         sys.exit()
-                    harvest(url, True, filename)
+                    harvest(data, True, filename)
                 else:
-                    harvest(url)
+                    harvest(data)
             elif "-e" in sys.argv:
                 if "-O" in sys.argv:
                     try:
@@ -104,9 +94,9 @@ def main():
                     except IndexError:
                         print("[-] Please provide a valid filename")
                         sys.exit()
-                    harvest_emails(url, True, filename)
+                    harvest_emails(data, True, filename)
                 else:
-                    harvest_emails(url)
+                    harvest_emails(data)
             elif "-p" in sys.argv:
                 if "-O" in sys.argv:
                     try:
@@ -114,9 +104,9 @@ def main():
                     except IndexError:
                         print("[-] Please provide a valid filename")
                         sys.exit()
-                    harvest_phones(url, True, filename)
+                    harvest_phones(data, True, filename)
                 else:
-                    harvest_phones(url)
+                    harvest_phones(data)
             else:
                 print(f"[-] Please provide a valid flag operation")
         else:
